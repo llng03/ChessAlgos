@@ -10,7 +10,8 @@ import static com.progra.chessalgos.chess.chessboard.pieces.Color.WHITE;
 public class PositionBuilder {
     private Piece[][] position;
     private Color toMove = WHITE;
-    private boolean[] castlingRights = {true, true, true, true}; //white kingside, white queenside, black kingside, black queenside
+    private boolean[] castlingRights = {true, true, true, true};
+    //white kingside, white queenside, black kingside, black queenside
     private Square ep;
     private int halfMovesSinceCaptureOrPawn = 0;
     private int moveNumber = 1;
@@ -172,7 +173,8 @@ public class PositionBuilder {
         return this;
     }
 
-
+    /*The piece objects remain the same. E.g. if we change the position of the knight, the method initializes
+    * a new position but using the same pieces, even the knight*/
     public PositionBuilder changePosition(Piece[][] oldPosition,
                                           Piece piece, Square from, Square target){
         Piece[][] newPosition = new Piece[BOARD_SIZE][BOARD_SIZE];

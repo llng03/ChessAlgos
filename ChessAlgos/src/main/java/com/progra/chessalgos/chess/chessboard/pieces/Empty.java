@@ -2,6 +2,7 @@ package com.progra.chessalgos.chess.chessboard.pieces;
 
 import com.progra.chessalgos.chess.chessboard.Move;
 import com.progra.chessalgos.chess.chessboard.Position;
+import com.progra.chessalgos.chess.chessboard.Square;
 import com.progra.chessalgos.chess.chessboard.pieces.Piece;
 
 import java.util.HashSet;
@@ -25,7 +26,7 @@ public class Empty extends Piece {
     }
 
     @Override
-    public Set<Move> getLegalMoves(Position position){
+    public Set<Move> getLegalMoves(Position position, Square square){
         return new HashSet<>();
     }
 

@@ -2,6 +2,7 @@ package com.progra.chessalgos.chess.chessboard.pieces;
 
 import com.progra.chessalgos.chess.chessboard.Move;
 import com.progra.chessalgos.chess.chessboard.Position;
+import com.progra.chessalgos.chess.chessboard.Square;
 
 import java.util.Set;
 
@@ -29,5 +30,5 @@ public abstract class Piece {
 
     public abstract boolean isOccupied();
 
-    public abstract Set<Move> getLegalMoves(Position position);
+    public abstract Set<Move> getLegalMoves(Position position, Square square);
 }

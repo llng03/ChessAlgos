@@ -9,12 +9,16 @@ import static com.progra.chessalgos.chess.chessboard.pieces.Color.WHITE;
 //every information about a chess position is stored here
 public class Position {
     //every object of this class should be immutable
+    /*how do we change the position then? - every position is an own object itself - this is why I
+    did not want to call the class "chessboard" because this would imply that we can change the position on it like we want
+     */
 
+    //the field contains all information we can get from a FEN-document
     private final Piece[][] position;
 
     private final Color toMove;
     private final boolean[] castlingRights;
-    private final Square ep;
+    private final Square ep; //is there any en passant move possible?
     private final int halfMovesSinceCaptureOrPawn;
     private final int moveNumber;
 
@@ -27,7 +31,7 @@ public class Position {
         this.moveNumber = moveNumber;
     }
 
-    //Output of a position
+    //Output of a position (especially helpful for testing)
     @Override
     public String toString(){
         StringBuilder s = new StringBuilder();
@@ -41,10 +45,13 @@ public class Position {
     }
 
     //Moves a piece and creates a new position
+   //TODO: how about the other variables of a position that change when a piece moves?
     public Position resetPiece(Piece piece, Square from, Square target){
         return new PositionBuilder()
                 .changePosition(this.position, piece, from, target).build();
     }
+
+    //getter methods of the variables
 
     public Color getToMove() {
         return toMove;
