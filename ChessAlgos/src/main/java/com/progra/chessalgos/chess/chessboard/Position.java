@@ -57,6 +57,10 @@ public class Position {
         return toMove;
     }
 
+    public Piece getPieceOn(Square square){
+        return position[square.rank()][square.file()];
+    }
+
     public Square getEp() {
         return this.ep;
     }

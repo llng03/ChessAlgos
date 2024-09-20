@@ -31,4 +31,5 @@ public abstract class Piece {
     public abstract boolean isOccupied();
 
     public abstract Set<Move> getLegalMoves(Position position, Square square);
+
 }
