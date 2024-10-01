@@ -1,6 +1,7 @@
 package com.progra.chessalgos.chess.chessboard;
 
 import com.progra.chessalgos.chess.chessboard.pieces.Color;
+import com.progra.chessalgos.chess.chessboard.pieces.King;
 import com.progra.chessalgos.chess.chessboard.pieces.Piece;
 
 import static com.progra.chessalgos.Constants.BOARD_SIZE;
@@ -80,4 +81,16 @@ public class Position {
     public int getHalfmovesSinceCaptureOrPawn(){
         return halfMovesSinceCaptureOrPawn;
     }
+
+    public Square findOpponentKing(Color opponentColor){
+        for(int rank = 0; rank < BOARD_SIZE; rank++){
+            for(int file = 0; file < BOARD_SIZE; file++){
+                Piece piece = this.position[rank][file];
+                if(piece instanceof King && piece.getColor().equals(opponentColor)){
+                    return Square.getSquare(rank, file);
+                }
+            }
+        }
+        return null; //Error case, king should always exist
+    };
 }
