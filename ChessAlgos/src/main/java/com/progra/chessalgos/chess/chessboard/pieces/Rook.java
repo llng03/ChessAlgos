@@ -29,65 +29,47 @@ public class Rook extends Piece{
         }
     }
     @Override
-    public Set<Move> getLegalMoves(Position position, Square square){
+    public Set<Move> getLegalMoves(Position position, Square square) {
         Set<Move> moves = new HashSet<>();
-        //moving down
-        for(int rank = square.rank() -1; rank >= 0; rank--){
-            if(!position.getPieceOn(Square.getSquare(rank, square.file())).isOccupied()){
-                moves.add(new Move(this, square, Square.getSquare(rank, square.file()), false, false, false, false));
-            }
-            else{
-                if(position.getPieceOn(Square.getSquare(rank,square.file())).getColor() == this.getColor()){
-                    break;
-                }
-                else{
-                    moves.add(new Move(this, square, Square.getSquare(rank,square.file()), true, false, true, false));
-                }
-            }
-        }
-        //moving up
-        for(int rank = square.rank() + 1; rank < BOARD_SIZE; rank++){
-            if(!position.getPieceOn(Square.getSquare(rank, square.file())).isOccupied()){
-                moves.add(new Move(this, square, Square.getSquare(rank, square.file()), false, false, false, false));
-            }
-            else{
-                if(position.getPieceOn(Square.getSquare(rank,square.file())).getColor() == this.getColor()){
-                    break;
-                }
-                else{
-                    moves.add(new Move(this, square, Square.getSquare(rank,square.file()), true, false, true, false));
-                }
-            }
-        }
-        //moving left
-        for(int file = square.file() - 1; file >= 0; file--){
-            if(!position.getPieceOn(Square.getSquare(square.rank(), file)).isOccupied()){
-                moves.add(new Move(this, square, Square.getSquare(square.rank(), file), false, false, true, false));
-            }
-            else{
-                if(position.getPieceOn(Square.getSquare(square.rank(), file)).getColor() == this.getColor()){
-                    break;
-                }
-                else{
-                    moves.add(new Move(this, square, Square.getSquare(square.rank(), file), true, false, true, false));
-                }
-            }
-        }
-        //moving right
-        for(int file = square.file() + 1; file <  BOARD_SIZE; file++){
-            if(!position.getPieceOn(Square.getSquare(square.rank(), file)).isOccupied()){
-                moves.add(new Move(this, square, Square.getSquare(square.rank(), file), false, false, true, false));
-            }
-            else{
-                if(position.getPieceOn(Square.getSquare(square.rank(), file)).getColor() == this.getColor()){
-                    break;
-                }
-                else{
-                    moves.add(new Move(this, square, Square.getSquare(square.rank(), file), true, false, true, false));
-                }
-            }
-        }
 
+        int cRank = square.rank();
+        int cFile = square.file();
+
+        //The rook can move in 4 directions: up, down, left and right
+        //Directions: (-1, 0), (1, 0), (0, -1), (0, 1)
+
+        int[] dRank = {-1, 1, 0, 0};
+        int[] dFile = {0, 0, -1, 1};
+
+        for(int direction = 0; direction < dRank.length; direction++){
+            int step = 1;
+            while(true){
+                int newRank = cRank + step * dRank[direction];
+                int newFile = cFile + step * dFile[direction];
+
+                //Test if square is still on the board:
+                if(newRank < 0 || newRank >= BOARD_SIZE || newFile < 0 || newFile >= BOARD_SIZE){
+                    break; //we are not on the chessboard anymore
+                }
+
+                Square targetSquare = Square.getSquare(newRank, newFile);
+                Piece target = position.getPieceOn(targetSquare);
+
+                if(!target.isOccupied()){
+                    //Square is empty so we can move there
+                    moves.add(new Move(this, square, targetSquare, false, false, false, false));
+                } else if(!target.getColor().equals(this.getColor())){
+                    //there is an enemy piece on the square we can capture
+                    moves.add(new Move(this, square, targetSquare, true, false, false, false));
+                    break; //We cannot move past an enemy piece
+                } else{
+                    //There is an ally piece in the way, we cannot move ahead
+                    break;
+                }
+
+                step++;
+            }
+        }
         return moves;
     }
 }

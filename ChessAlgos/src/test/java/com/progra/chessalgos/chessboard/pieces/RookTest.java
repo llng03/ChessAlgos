@@ -3,6 +3,7 @@ package com.progra.chessalgos.chessboard.pieces;
 import com.progra.chessalgos.chess.chessboard.Position;
 import com.progra.chessalgos.chess.chessboard.PositionBuilder;
 import com.progra.chessalgos.chess.chessboard.Square;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RookTest {
 
     @Test
-    @DisplayName("The Rook can move vertically")
+    @DisplayName("can move vertically")
     void test1(){
         PositionBuilder builder = new PositionBuilder();
         Position pos = builder.takeEmptyBoard().putWhiteRookOn(C4).build();
@@ -21,7 +22,7 @@ public class RookTest {
 
 
     @Test
-    @DisplayName("The Rook can move horizontally")
+    @DisplayName("can move horizontally")
     void test2(){
         PositionBuilder builder = new PositionBuilder();
         Position pos = builder.takeEmptyBoard().putWhiteRookOn(F7).build();
@@ -29,7 +30,7 @@ public class RookTest {
     }
 
     @Test
-    @DisplayName("The Rook can not move past an own piece")
+    @DisplayName("can not move past an own piece")
     void test3(){
         PositionBuilder builder = new PositionBuilder();
         Position pos = builder.takeEmptyBoard().putWhiteRookOn(F7).putWhiteRookOn(F2).build();
@@ -37,10 +38,18 @@ public class RookTest {
     }
 
     @Test
-    @DisplayName("The Rook can capture an enemy piece in its way")
+    @DisplayName("can capture an enemy piece in its way")
     void test4(){
         PositionBuilder builder = new PositionBuilder();
         Position pos = builder.takeEmptyBoard().putWhiteRookOn(F7).putBlackRookOn(F2).build();
         assertThat(pos.getPieceOn(F7).getLegalMoves(pos, F7)).anyMatch(move -> move.getTo().equals(F2) && move.isCapture());
+    }
+
+    @Test
+    @DisplayName("cannot move past an enemy piece")
+    void test5() {
+        PositionBuilder builder = new PositionBuilder();
+        Position pos = builder.takeEmptyBoard().putWhiteRookOn(F7).putBlackRookOn(F2).build();
+        Assertions.assertThat(pos.getPieceOn(F7).getLegalMoves(pos, F7)).noneMatch(move -> move.getTo().equals(F1));
     }
 }
