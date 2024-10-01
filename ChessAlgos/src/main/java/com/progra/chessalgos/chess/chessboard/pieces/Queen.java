@@ -29,8 +29,29 @@ public class Queen extends Piece{
 
     @Override
     public Set<Move> getLegalMoves(Position position, Square square){
-        Set<Move> set = new HashSet<>();
+        Set<Move> moves = new HashSet<>();
+        //We use Composition here to prevent redundant code
 
-        return set;
+        //Rook logic
+        Rook rook = new Rook(this.getColor());
+        Set<Move> rookMoves = rook.getLegalMoves(position, square);
+        moves.addAll(reassignMovesToQueen(rookMoves, square));
+
+        //Bishop logic
+        Bishop bishop = new Bishop(this.getColor());
+        Set<Move> bishopMoves = bishop.getLegalMoves(position, square);
+        moves.addAll(reassignMovesToQueen(bishopMoves, square));
+
+        return moves;
+    }
+
+    private Set<Move> reassignMovesToQueen(Set<Move> moves, Square from){
+        Set<Move> reassignedMoves = new HashSet<>();
+        for (Move move : moves) {
+            //Create a new Move, but substitute the actor Piece with this Queen
+            Move queenMove = new Move(this, from, move.getTo(), move.isCapture(), move.isPawnMove(), move.isCastle(), move.isCheck());
+            reassignedMoves.add(queenMove);
+        }
+        return reassignedMoves;
     }
 }

@@ -42,6 +42,7 @@ public class RookTest {
     void test4(){
         PositionBuilder builder = new PositionBuilder();
         Position pos = builder.takeEmptyBoard().putWhiteRookOn(F7).putBlackRookOn(F2).build();
+        System.out.println(pos.getPieceOn(F7).getLegalMoves(pos, F7).toString());
         assertThat(pos.getPieceOn(F7).getLegalMoves(pos, F7)).anyMatch(move -> move.getTo().equals(F2) && move.isCapture());
     }
 

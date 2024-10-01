@@ -45,4 +45,18 @@ public class Move {
     public boolean isCastle(){
         return castle;
     }
+
+    @Override
+    public String toString(){
+        String s = actor.toString();
+        if(isCapture()){ s += "x"; }
+        int filenum = 97 + getTo().file();
+        char file = (char) filenum;
+        int rank = getTo().rank() + 1;
+        s += file;
+        s += rank;
+        if(isCheck()){ s += "+"; }
+
+        return s;
+    }
 }
