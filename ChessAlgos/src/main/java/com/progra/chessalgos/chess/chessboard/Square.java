@@ -28,8 +28,8 @@ public enum Square {
     }
 
     public static Square getSquare(int rank, int file){
-        int position = rank * 8 + file;
-        if (position < 0 || position >= 64) {
+        int position = rank * BOARD_SIZE + file;
+        if (position < 0 || position >= BOARD_SIZE * BOARD_SIZE) {
             throw new IllegalArgumentException("rank or file not valid");
         }
         for (Square sqaure : Square.values()) {
@@ -38,5 +38,9 @@ public enum Square {
             }
         }
         throw new IllegalArgumentException("rank or file not valid");
+    }
+
+    public static boolean isInsideBoard(int rank, int file){
+        return !(rank < 0 || rank >= BOARD_SIZE || file < 0 || file >= BOARD_SIZE);
     }
 }
