@@ -5,6 +5,9 @@ import com.progra.chessalgos.chess.chessboard.pieces.King;
 import com.progra.chessalgos.chess.chessboard.pieces.Piece;
 
 import static com.progra.chessalgos.Constants.BOARD_SIZE;
+import static com.progra.chessalgos.chess.chessboard.Square.*;
+import static com.progra.chessalgos.chess.Util.findObject;
+import static com.progra.chessalgos.chess.chessboard.pieces.Color.BLACK;
 import static com.progra.chessalgos.chess.chessboard.pieces.Color.WHITE;
 
 //every information about a chess position is stored here
@@ -46,10 +49,38 @@ public class Position {
     }
 
     //Moves a piece and creates a new position
-   //TODO: how about the other variables of a position that change when a piece moves?
-    public Position resetPiece(Piece piece, Square from, Square target){
-        return new PositionBuilder()
-                .changePosition(this.position, piece, from, target).build();
+    public Position move(Square start, Square target){
+        //Find a legal move with the same start and target squares: if not found the method returns null
+        Move move = findObject(getPieceOn(start).getLegalMoves(this, start), m -> m.getFrom().equals(start) && m.getTo().equals(target));
+
+        if(move != null){
+            PositionBuilder builder = new PositionBuilder().changePosition(this.position, this.getPieceOn(start), start, target);
+            //Castle
+            if(move.isCastle()) {
+                //Queenside Castle
+                //target = C1 or C8
+                Square rookStart = toMove == WHITE ? A1 : A8;
+                Square rookTarget = toMove == WHITE ? D1 : D8;
+
+                //Kingside Castle
+                if (target == (toMove == WHITE ? Square.G1 : G8)) {
+                    rookStart = toMove == WHITE ? H1 : H8;
+                    rookTarget = toMove == WHITE ? F1 : F8;
+                }
+
+                builder.changePosition(this.position, this.getPieceOn(rookStart), rookStart, rookTarget)
+                        .takeKingsideCastlingRightsFrom(toMove)
+                        .takeQueensideCastlingRightsFrom(toMove);
+            }
+
+            return builder.toMove(this.toMove.change())
+                    .setMoveNumber(moveNumber + (toMove == BLACK? 1 : 0))
+                    .setHalfMovesSinceCaptureOrPawn(this.halfMovesSinceCaptureOrPawn + (move.isPawnMove() || move.isCapture() ? 0 : 1))
+                    .build();
+
+        } else {
+            throw new IllegalArgumentException("Move is not legal");
+        }
     }
 
     //getter methods of the variables

@@ -41,7 +41,7 @@ public class Pawn extends Piece {
     public Set<Move> getLegalMoves(Position position, Square square) {
         Set<Move> moves = new HashSet<>();
         int direction = this.getColor().equals(WHITE) ? 1 : -1; //white pawns move the array down (+1), black pawns up(-1)
-        int endRank = this.getColor().equals(WHITE) ? 0 : BOARD_SIZE; //end row for promotion
+        int endRank = this.getColor().equals(WHITE) ? BOARD_SIZE - 1 : 0; //end row for promotion
 
         int cRank = square.rank();
         int cFile = square.file();
@@ -51,7 +51,7 @@ public class Pawn extends Piece {
             //One square ahead is empty
             moves.add(new Move(this, square, getSquare(cRank + direction, cFile), false, true, false, false));
             //First move (two steps farward if the path is clear)
-            if (onSecondRank(square) && isInsideBoard(cRank + 2 * direction, cFile) && !position.getPieceOn(Square.getSquare(cRank + direction, cFile)).isOccupied()) {
+            if (onSecondRank(square) && isInsideBoard(cRank + 2 * direction, cFile) && !position.getPieceOn(Square.getSquare(cRank + 2 * direction, cFile)).isOccupied()) {
                 moves.add(new Move(this, square, Square.getSquare(cRank + 2 * direction, cFile), false, true, false, false));
             }
         }
@@ -63,8 +63,10 @@ public class Pawn extends Piece {
             moves.add(new Move(this, square, getSquare(cRank + direction, cFile + 1), true, true, false, false));
         }
 
-        //TODO: En passent (not implemented here, needs special rules
-        //moves.addAll(checkEnPassent());
+        //En passent
+        if(position.getEp() != null) {
+            moves.add(new Move(this, square, position.getEp(), true, true, false, false));
+        }
 
         //Promotion (reaching the back rank)
         Set<Move> promotionMoves = checkForPromotion(moves, cRank + direction, endRank);

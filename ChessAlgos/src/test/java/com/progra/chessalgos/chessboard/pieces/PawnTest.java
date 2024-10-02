@@ -38,7 +38,7 @@ public class PawnTest {
     @DisplayName("no capture forward")
     void test4(){
         PositionBuilder positionBuilder = new PositionBuilder();
-        Position pos = positionBuilder.takeEmptyBoard().putBlackPawnOn(E4).putBlackPawnOn(E5).build();
+        Position pos = positionBuilder.takeEmptyBoard().putWhitePawnOn(E4).putBlackPawnOn(E5).build();
         assertThat(pos.getPieceOn(E4).getLegalMoves(pos,Square.E4)).noneMatch(move -> move.getTo().equals(E5));
     }
 
@@ -71,6 +71,7 @@ public class PawnTest {
     void test8(){
         PositionBuilder positionBuilder = new PositionBuilder();
         Position pos = positionBuilder.takeEmptyBoard().putWhitePawnOn(E2).putBlackQueenOn(E3).build();
+        System.out.println(pos.getPieceOn(E2).getLegalMoves(pos,Square.E2).toString());
         assertThat(pos.getPieceOn(E2).getLegalMoves(pos,E2)).noneMatch(move -> move.getTo().equals(E4));
     }
 
