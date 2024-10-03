@@ -27,6 +27,7 @@ public enum Square {
         return coordinate % BOARD_SIZE;
     }
 
+    //outputs the Square to the correct coordinates of the position-array
     public static Square getSquare(int rank, int file){
         int position = rank * BOARD_SIZE + file;
         if (position < 0 || position >= BOARD_SIZE * BOARD_SIZE) {
@@ -42,5 +43,28 @@ public enum Square {
 
     public static boolean isInsideBoard(int rank, int file){
         return !(rank < 0 || rank >= BOARD_SIZE || file < 0 || file >= BOARD_SIZE);
+    }
+
+    //outputs the Square to the correct String, which describes the Square
+    public static Square getSquare(String string){
+        if(string.length() != 2){
+            throw new IllegalArgumentException("this is not a valid square");
+        }
+
+        char rankChar = string.charAt(1);
+        char fileChar = string.charAt(0);
+
+        int rank = 0;
+        int file = 0;
+
+        if(rankChar < '1' || rankChar > '8') {
+            throw new IllegalArgumentException("this is not a valid square");
+        } else { rank = rankChar - '1'; }
+
+        if(fileChar < 'a' || fileChar > 'h') {
+            throw new IllegalArgumentException("this is not a valid square");
+        } else { file = fileChar - 'a'; }
+
+        return Square.getSquare(rank, file);
     }
 }

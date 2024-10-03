@@ -12,4 +12,10 @@ public class SquareTest {
     void test1(){
         assertThat(Square.getSquare(3,2)).isEqualTo(Square.C4);
     }
+
+    @Test
+    @DisplayName("output the correct square to c5")
+    void test2(){
+        assertThat(Square.getSquare("c5")).isEqualTo(Square.C5);
+    }
 }

@@ -54,7 +54,12 @@ public class Position {
         Move move = findObject(getPieceOn(start).getLegalMoves(this, start), m -> m.getFrom().equals(start) && m.getTo().equals(target));
 
         if(move != null){
-            PositionBuilder builder = new PositionBuilder().changePosition(this.position, this.getPieceOn(start), start, target);
+            //TODO: FIX: Zweimal changePosition geht nicht weil die alte Position als Grundlagegenommen wird.
+            Position newPos = new PositionBuilder().changePosition(this.position, this.getPieceOn(start), start, target)
+                    .toMove(this.toMove.change())
+                    .setMoveNumber(moveNumber + (toMove == BLACK? 1 : 0))
+                    .setHalfMovesSinceCaptureOrPawn(this.halfMovesSinceCaptureOrPawn + (move.isPawnMove() || move.isCapture() ? 0 : 1))
+                    .build();
             //Castle
             if(move.isCastle()) {
                 //Queenside Castle
@@ -68,15 +73,14 @@ public class Position {
                     rookTarget = toMove == WHITE ? F1 : F8;
                 }
 
-                builder.changePosition(this.position, this.getPieceOn(rookStart), rookStart, rookTarget)
+                newPos = new PositionBuilder()
+                        .changePosition(newPos.position, this.getPieceOn(rookStart), rookStart, rookTarget)
                         .takeKingsideCastlingRightsFrom(toMove)
-                        .takeQueensideCastlingRightsFrom(toMove);
+                        .takeQueensideCastlingRightsFrom(toMove)
+                        .build();
             }
 
-            return builder.toMove(this.toMove.change())
-                    .setMoveNumber(moveNumber + (toMove == BLACK? 1 : 0))
-                    .setHalfMovesSinceCaptureOrPawn(this.halfMovesSinceCaptureOrPawn + (move.isPawnMove() || move.isCapture() ? 0 : 1))
-                    .build();
+            return newPos;
 
         } else {
             throw new IllegalArgumentException("Move is not legal");

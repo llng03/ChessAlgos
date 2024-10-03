@@ -44,4 +44,12 @@ public class KingTest {
         assertThat(pos.getPieceOn(E1).getLegalMoves(pos,E1)).noneMatch(move-> move.isCastle());
     }
 
+    @Test
+    @DisplayName("castles correctly")
+    public void test5() {
+        PositionBuilder positionBuilder = new PositionBuilder();
+        Position pos = positionBuilder.takeEmptyBoard().putWhiteKingOn(E1).putWhiteRookOn(H1).build();
+        assertThat(pos.getPieceOn(E1).getLegalMoves(pos,E1)).anyMatch(move-> move.getTo().equals(G1));
+    }
+
 }
