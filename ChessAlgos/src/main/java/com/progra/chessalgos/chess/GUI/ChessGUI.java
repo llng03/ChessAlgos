@@ -24,8 +24,25 @@ public class ChessGUI extends JFrame {
     private JButton startButton = new JButton("Start Game");
     private JButton endButton = new JButton("Quit Game");
     private JLabel infoLabel = new JLabel("Your Move: ");
-    private JPanel chessBoardPanel = new JPanel(new GridLayout(BOARD_SIZE, BOARD_SIZE));
-    private ImageIcon whitePawnIcon, blackPawnIcon, whiteKnightIcon, blackKnightIcon,
+    private JPanel chessBoardPanel = new JPanel(new GridLayout(BOARD_SIZE, BOARD_SIZE)) {
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = getParent() != null ? getParent().getSize() : super.getSize();
+            int squareSize = Math.min(size.width, size.height);
+            return new Dimension(squareSize, squareSize);
+        }
+
+        @Override
+        public void setBounds(int x, int y, int width, int height) {
+            int size = Math.min(width, height);
+            // centering the board in the panel
+            int xOffset = (width - size) / 2;
+            int yOffset = (height - size) / 2;
+            super.setBounds(x + xOffset, y + yOffset, size, size);
+        }
+    };
+
+    private Image whitePawnIcon, blackPawnIcon, whiteKnightIcon, blackKnightIcon,
             whiteBishopIcon, blackBishopIcon, whiteRookIcon, blackRookIcon, whiteQueenIcon,
             blackQueenIcon, whiteKingIcon, blackKingIcon;
 
@@ -39,7 +56,8 @@ public class ChessGUI extends JFrame {
     //Constructor
     public ChessGUI() {
         setTitle("Chessgame");
-        setSize(600,600);
+        pack();
+        setMinimumSize(new Dimension(600, 600));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -62,7 +80,10 @@ public class ChessGUI extends JFrame {
         infoPanel.add(infoLabel);
 
         //add all Panels to the JFrame
-        add(chessBoardPanel, BorderLayout.CENTER); //Chessboard in the Center
+        // Wrapper-Panel with GridBagLayout, das keeps chessboard at the center
+        JPanel wrapperPanel = new JPanel(new GridBagLayout());
+        wrapperPanel.add(chessBoardPanel);
+        add(wrapperPanel, BorderLayout.CENTER); //Chessboard in the Center
         add(infoPanel, BorderLayout.NORTH); //Info Label on Upper Side
         add(buttonPanel, BorderLayout.PAGE_END); //Buttons on the Bottom
 
@@ -89,41 +110,45 @@ public class ChessGUI extends JFrame {
     }
 
     private void loadPieceIcons() {
-        ImageIcon whitePawnIconOrig = new ImageIcon(getClass().getResource("/images/white-pawn.png"));
-        ImageIcon blackPawnIconOrig = new ImageIcon(getClass().getResource("/images/black-pawn.png"));
-        ImageIcon whiteKnightIconOrig = new ImageIcon(getClass().getResource("/images/white-knight.png"));
-        ImageIcon blackKnightIconOrig = new ImageIcon(getClass().getResource("/images/black-knight.png"));
-        ImageIcon whiteBishopIconOrig = new ImageIcon(getClass().getResource("/images/white-bishop.png"));
-        ImageIcon blackBishopIconOrig = new ImageIcon(getClass().getResource("/images/black-bishop.png"));
-        ImageIcon whiteRookIconOrig = new ImageIcon(getClass().getResource("/images/white-rook.png"));
-        ImageIcon blackRookIconOrig = new ImageIcon(getClass().getResource("/images/black-rook.png"));
-        ImageIcon whiteQueenIconOrig = new ImageIcon(getClass().getResource("/images/white-queen.png"));
-        ImageIcon blackQueenIconOrig = new ImageIcon(getClass().getResource("/images/black-queen.png"));
-        ImageIcon whiteKingIconOrig = new ImageIcon(getClass().getResource("/images/white-king.png"));
-        ImageIcon blackKingIconOrig = new ImageIcon(getClass().getResource("/images/black-king.png"));
-
-
         //Scale Icons
-        whitePawnIcon = new ImageIcon(whitePawnIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));
-        blackPawnIcon = new ImageIcon(blackPawnIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));
-        whiteKnightIcon = new ImageIcon(whiteKnightIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));
-        blackKnightIcon = new ImageIcon(blackKnightIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;
-        whiteBishopIcon = new ImageIcon(whiteBishopIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;
-        blackBishopIcon = new ImageIcon(blackBishopIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;;
-        whiteRookIcon = new ImageIcon(whiteRookIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;;
-        blackRookIcon = new ImageIcon(blackRookIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;;
-        whiteQueenIcon = new ImageIcon(whiteQueenIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;;
-        blackQueenIcon = new ImageIcon(blackQueenIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;;;
-        whiteKingIcon = new ImageIcon(whiteKingIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;;;
-        blackKingIcon = new ImageIcon(blackKingIconOrig.getImage().getScaledInstance(64,64, Image.SCALE_SMOOTH));;;;
+        whitePawnIcon = new ImageIcon(getClass().getResource("/images/white-pawn.png")).getImage();
+        blackPawnIcon = new ImageIcon(getClass().getResource("/images/black-pawn.png")).getImage();
+        whiteKnightIcon = new ImageIcon(getClass().getResource("/images/white-knight.png")).getImage();
+        blackKnightIcon = new ImageIcon(getClass().getResource("/images/black-knight.png")).getImage();
+        whiteBishopIcon = new ImageIcon(getClass().getResource("/images/white-bishop.png")).getImage();
+        blackBishopIcon = new ImageIcon(getClass().getResource("/images/black-bishop.png")).getImage();
+        whiteRookIcon = new ImageIcon(getClass().getResource("/images/white-rook.png")).getImage();
+        blackRookIcon = new ImageIcon(getClass().getResource("/images/black-rook.png")).getImage();
+        whiteQueenIcon = new ImageIcon(getClass().getResource("/images/white-queen.png")).getImage();
+        blackQueenIcon = new ImageIcon(getClass().getResource("/images/black-queen.png")).getImage();;
+        whiteKingIcon = new ImageIcon(getClass().getResource("/images/white-king.png")).getImage();;;
+        blackKingIcon = new ImageIcon(getClass().getResource("/images/black-king.png")).getImage();;;
 
+    }
+
+    private Image getPieceImage(Piece piece) {
+        if (piece instanceof Pawn) {
+            return piece.getColor() == WHITE ? whitePawnIcon : blackPawnIcon;
+        } else if (piece instanceof Rook) {
+            return piece.getColor() == WHITE ? whiteRookIcon : blackRookIcon;
+        } else if (piece instanceof Knight) {
+            return piece.getColor() == WHITE ? whiteKnightIcon : blackKnightIcon;
+        } else if (piece instanceof Bishop) {
+            return piece.getColor() == WHITE ? whiteBishopIcon : blackBishopIcon;
+        } else if (piece instanceof Queen) {
+            return piece.getColor() == WHITE ? whiteQueenIcon : blackQueenIcon;
+        } else if (piece instanceof King) {
+            return piece.getColor() == WHITE ? whiteKingIcon : blackKingIcon;
+        }
+        return null;
     }
 
     private void createChessBoard() {
         boolean isWhite = true;
         for(int rank = BOARD_SIZE - 1; rank >= 0; rank--){
             for (int file = 0; file < BOARD_SIZE; file++) {
-                JPanel square = new JPanel();
+                JPanel square = new SquarePanel(new GridBagLayout());
+
                 if(isWhite){
                     square.setBackground(Color.WHITE);
                 }
@@ -134,49 +159,26 @@ public class ChessGUI extends JFrame {
                 Piece piece = position.getPieceOn(Square.getSquare(rank, file));
 
                 //Pick Icon for Piece Type
-                if(piece != null){
+                if (piece != null) {
                     JLabel pieceLabel = new JLabel();
-                    pieceLabel.setOpaque(false); //make it transparent
+                    pieceLabel.setOpaque(false);
 
-                    if(piece instanceof Pawn){
-                        if(piece.getColor() == WHITE){
-                            pieceLabel.setIcon(whitePawnIcon);
-                        } else{
-                            pieceLabel.setIcon(blackPawnIcon);
+                    // Dynamische Icongröße berechnen
+                    square.addComponentListener(new java.awt.event.ComponentAdapter() {
+                        @Override
+                        public void componentResized(java.awt.event.ComponentEvent e) {
+                            int size = Math.min(square.getWidth(), square.getHeight());
+                            Image img = getPieceImage(piece);
+                            if (img != null && size > 0) {
+                                Image scaledImg = img.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+                                pieceLabel.setIcon(new ImageIcon(scaledImg));
+                                square.revalidate();
+                                square.repaint();
+                            }
                         }
-                    } else if (piece instanceof Rook) {
-                        if (piece.getColor() == WHITE) {
-                            pieceLabel.setIcon(whiteRookIcon);
-                        } else {
-                            pieceLabel.setIcon(blackRookIcon);
-                        }
-                    } else if (piece instanceof Knight) {
-                        if (piece.getColor() == WHITE) {
-                            pieceLabel.setIcon(whiteKnightIcon);
-                        } else {
-                            pieceLabel.setIcon(blackKnightIcon);
-                        }
-                    } else if (piece instanceof Bishop) {
-                        if (piece.getColor() == WHITE) {
-                            pieceLabel.setIcon(whiteBishopIcon);
-                        } else {
-                            pieceLabel.setIcon(blackBishopIcon);
-                        }
-                    } else if (piece instanceof Queen) {
-                        if (piece.getColor() == WHITE) {
-                            pieceLabel.setIcon(whiteQueenIcon);
-                        } else {
-                            pieceLabel.setIcon(blackQueenIcon);
-                        }
-                    } else if (piece instanceof King) {
-                        if (piece.getColor() == WHITE) {
-                            pieceLabel.setIcon(whiteKingIcon);
-                        } else {
-                            pieceLabel.setIcon(blackKingIcon);
-                        }
-                    }
+                    });
 
-                    square.add(pieceLabel);
+                    square.add(pieceLabel, new GridBagConstraints());
                 }
 
                 //Mouse Listener for Squares

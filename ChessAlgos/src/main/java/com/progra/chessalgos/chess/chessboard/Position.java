@@ -54,7 +54,6 @@ public class Position {
         Move move = findObject(getPieceOn(start).getLegalMoves(this, start), m -> m.getFrom().equals(start) && m.getTo().equals(target));
 
         if(move != null){
-            //TODO: FIX: Zweimal changePosition geht nicht weil die alte Position als Grundlagegenommen wird.
             Position newPos = new PositionBuilder().changePosition(this.position, this.getPieceOn(start), start, target)
                     .toMove(this.toMove.change())
                     .setMoveNumber(moveNumber + (toMove == BLACK? 1 : 0))
